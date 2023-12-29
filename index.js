@@ -9,11 +9,6 @@ function numberIsClicked () {
             counter++;
 
             numText += buttonText;
-
-
-    
-            // console.log('num1 is: ' + num1);
-            // console.log('num2 is: ' + num2);
             }
         });
     });
@@ -25,59 +20,70 @@ function operationIsClicked () {
         button.addEventListener('click', function () {
             const buttonText = this.innerText;
             userInput.innerText += buttonText;
-            operation = buttonText;
+
+            // operation array
+            operation[operationCounter] = buttonText;
             operationCounter++;
 
+            // If statements
             if(operationCounter == 1) {
+                // Initial Num1
                 num1 = numText;
-                numText = '';
-                console.log('num1 is: ' + num1);
+                numText = ''; // is reset
+                console.log('Initial Num1 is: ' + num1);
             } else {
+                // If OperationCounter > 1
+                operationDecrement = -2; // is changed
                 operate();
-                console.log('counter: ' + operationCounter);
             }
-            
-            
-            
-            
         })
     });
 }
 
+function getAnswer() {
+    if (operation[operationCounter + operationDecrement] == '+') {
+        answer = add(Number(num1), Number(num2));
+    } else if (operation[operationCounter + operationDecrement] == '-') {
+        answer = subtract(Number(num1), Number(num2));
+    } else if (operation[operationCounter + operationDecrement] == '×') {
+        answer = multiply(Number(num1), Number(num2));
+    } else if (operation[operationCounter + operationDecrement] == '÷') {
+        answer = divide(Number(num1), Number(num2));
+    }
+}
+
 function operate() {
 
-    if(num2 == undefined) {
+    if(operationCounter == 1) {
         num2 = numText;
-        console.log('num2 is: ' + num2);
+        numText = '';
+        console.log('Num2 is: ' + num2);
     } else {
         num2 = numText;
+        numText = '';
+        console.log('Num2 is: ' + num2);
     }
-
-    if (operation == '+') {
-        num1 = Number(num1) + Number(num2);
-    }
-    console.log('numText: ' + numText);
-    console.log('num2 is: ' + num2);
-    console.log('num1 is now answer: ' + num1);
-    
-  
-
-    numText = '';
+   
+   getAnswer();
+   
+   num1 = answer;
+   console.log('Num1 is answer: ' + num1);
+   console.log('The answer is: ' + answer);
     
 }
 
 
 // Operations
 const add = (a, b) => Number(a + b);
-const subtract = (a, b) => a - b;
-const multiply = (a, b) => a * b;
-const divide = (a, b) => a / b;
+const subtract = (a, b) => Number(a - b);
+const multiply = (a, b) => Number(a * b);
+const divide = (a, b) => Number(a / b);
 
 
 // 3 Vars for each part of an operation.
 let num1;
 let num2;
-let operation;
+let operation = [];
 
 // Display Vars
 const userInput = document.querySelector('.user-input');
@@ -88,6 +94,7 @@ let counter = 0;
 let numText = '';
 let answer = 0;
 let operationCounter = 0;
+let operationDecrement = -1;
 
 // Button Vars
 const calculatorNums = document.querySelectorAll('.number-btn');
@@ -105,6 +112,7 @@ clearBtn.addEventListener('click', function () {
 })
 
 equalBtn.addEventListener('click', function() {
+    operationDecrement = -1; // is changed back
     operate();
-    numText = ''; // reset
+    solution.innerText = answer;
 })
