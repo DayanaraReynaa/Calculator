@@ -1,6 +1,6 @@
 // Functions
 
-function clearAll () {
+function clearAll() {
     userInput.innerText = '';
     solution.innerText = '';
     numText = '';
@@ -15,51 +15,59 @@ function clearAll () {
     console.log('Everything has been cleared');
 }
 
-function numberIsClicked () {
+function numberIsClicked() {
     calculatorNums.forEach(button => {
         button.addEventListener('click', function () {
-            if(equalBtn.classList.contains('active')) {
-                clearAll();
-                equalBtn.classList.remove('active');
-            }
-            if(counter < 20) { // if statement will be used later
-            const buttonText = this.innerText;
-            userInput.innerText += buttonText;
-            counter++;
 
-            numText += buttonText;
+            if (onBtn.classList.contains('active')) {
+                if (equalBtn.classList.contains('active')) {
+                    clearAll();
+                    equalBtn.classList.remove('active');
+                }
+                if (counter < 20) { // if statement will be used later
+                    const buttonText = this.innerText;
+                    userInput.innerText += buttonText;
+                    counter++;
+
+                    numText += buttonText;
+                }
             }
         });
     });
 
 }
 
-function operationIsClicked () {
+function operationIsClicked() {
     calculatorOperations.forEach(button => {
         button.addEventListener('click', function () {
-            if(equalBtn.classList.contains('active')) {
-                clearAll();
-                equalBtn.classList.remove('active');
-            } else {
-            const buttonText = this.innerText;
-            userInput.innerText += buttonText;
-            initialCounter++;
-          
+            if(counter < 20) {
+            if (onBtn.classList.contains('active')) {
+                if (equalBtn.classList.contains('active')) {
+                    clearAll();
+                    equalBtn.classList.remove('active');
+                } else {
+                    const buttonText = this.innerText;
+                    userInput.innerText += buttonText;
+                    initialCounter++;
+                    counter++;
 
-            // operation array
-            operation[operationCounter] = buttonText;
-            operationCounter++;
 
-            // If statements
-            if(initialCounter == 1) {
-                // Initial Num1
-                num1 = numText;
-                numText = ''; // is reset
-                console.log('Initial Num1 is: ' + num1);
-            } else if(operationCounter > 1)  {
-                // If OperationCounter > 1
-                operationDecrement = -2; // is changed
-                operate();
+                    // operation array
+                    operation[operationCounter] = buttonText;
+                    operationCounter++;
+
+                    // If statements
+                    if (initialCounter == 1) {
+                        // Initial Num1
+                        num1 = numText;
+                        numText = ''; // is reset
+                        console.log('Initial Num1 is: ' + num1);
+                    } else if (operationCounter > 1) {
+                        // If OperationCounter > 1
+                        operationDecrement = -2; // is changed
+                        operate();
+                    }
+                }
             }
         }
         })
@@ -80,7 +88,7 @@ function getAnswer() {
 
 function operate() {
 
-    if(operationCounter == 1) {
+    if (operationCounter == 1) {
         num2 = numText;
         numText = '';
         console.log('Num2 is: ' + num2);
@@ -89,13 +97,13 @@ function operate() {
         numText = '';
         console.log('Num2 is: ' + num2);
     }
-   
-   getAnswer();
-   
-   num1 = answer;
-   console.log('Num1 is answer: ' + num1);
-   console.log('The answer is: ' + answer);
-    
+
+    getAnswer();
+
+    num1 = answer;
+    console.log('Num1 is answer: ' + num1);
+    console.log('The answer is: ' + answer);
+
 }
 
 
@@ -114,6 +122,7 @@ let operation = [];
 // Display Vars
 const userInput = document.querySelector('.user-input');
 const solution = document.querySelector('.solution');
+const displayScreen = document.querySelector('.display-screen');
 
 // Extras
 let counter = 0;
@@ -130,44 +139,64 @@ const clearBtn = document.getElementById('clear-btn');
 const equalBtn = document.getElementById('equal-btn');
 const dotBtn = document.getElementById('dot-btn');
 const deleteBtn = document.getElementById('delete-btn');
+const onBtn = document.getElementById('on-btn');
+const offBtn = document.getElementById('off-btn');
 // Function Calls / Event Listeners
+
+
 numberIsClicked();
 operationIsClicked();
 
 clearBtn.addEventListener('click', function () {
     clearAll();
-    
+
 });
 
-equalBtn.addEventListener('click', function() {
-    if(operationCounter == 0) {
+equalBtn.addEventListener('click', function () {
+    if (operationCounter == 0) {
         solution.innerText = numText;
     } else {
-     operationDecrement = -1; // is changed back
-     operate();
-     solution.innerText = answer;
+        operationDecrement = -1; // is changed back
+        operate();
+        solution.innerText = answer;
     }
 
     equalBtn.classList.add('active');
 });
 
-dotBtn.addEventListener('click', function() {
+dotBtn.addEventListener('click', function () {
     userInput.innerText += '.';
     numText += '.';
 });
 
-deleteBtn.addEventListener('click', function() {
+deleteBtn.addEventListener('click', function () {
     numText = numText.substring(0, numText.length - 1);
     // deleted
-    let deleted = userInput.innerText.substring(userInput.innerText.length - 1); 
-
-    if(deleted == '+' || deleted == '-' || deleted == '×' || deleted == '÷') {
+    let deleted = userInput.innerText.substring(userInput.innerText.length - 1);
+    console.log('Deleted is: ' + deleted);
+    if (deleted == '+' || deleted == '-' || deleted == '×' || deleted == '÷') {
         operation.pop(); // last operation is taken out of array
         operationCounter--;
 
-        console.log('rip ' + deleted);
+    } else if (operationCounter > 1 && operationCounter % 2 == 1) {
+        num1 = answer;
+        console.log('Num1 is now:' + num1);
     }
-    userInput.innerText = userInput.innerText.substring(0, userInput.innerText.length - 1); 
-    console.log('NumText is: ' + numText);
-    console.log('Deleted is: ' + deleted);
+
+    // display screen
+    userInput.innerText = userInput.innerText.substring(0, userInput.innerText.length - 1);
+
 });
+
+
+offBtn.addEventListener('click', function () {
+    clearAll();
+    displayScreen.style.backgroundColor = 'transparent';
+    onBtn.classList.remove('active');
+})
+
+onBtn.addEventListener('click', function () {
+    clearAll();
+    displayScreen.style.backgroundColor = '#d4c1b8';
+    onBtn.classList.add('active');
+})
